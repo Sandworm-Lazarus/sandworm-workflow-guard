@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "project": "sandworm-workflow-guard",
+  "mode": "fixture",
+  "generated_at": "2026-11-11T00:00:00+00:00",
+  "engine": {
+    "name": "zizmor",
+    "version": null,
+    "supported_version": "1.32.0",
+    "version_verified": false,
+    "network": null,
+    "format": "json-v1"
+  },
+  "summary": {
+    "findings": 1,
+    "high": 1,
+    "duplicates_removed": 0
+  },
+  "findings": [
+    {
+      "id": "82cb7a06bfbf3046eb4eb40120465e057bbca68f13cf9828a72e7ff8947542d9",
+      "rule": "template-injection",
+      "file_id": "4da99b170e6f09d4db345aaa06f346e15217abc287df0e50f2ea9a974d0012d4",
+      "line": 9,
+      "column": 9,
+      "severity": "high",
+      "confidence": "high",
+      "guidance_th": "ย้ายค่าจาก event ไป env แล้วอ้างผ่านตัวแปร shell แทนการแทรก expression ลง run"
+    }
+  ],
+  "privacy": {
+    "paths": "SHA-256 aliases",
+    "workflow_snippets": "omitted",
+    "raw_metadata": "omitted"
+  }
+}

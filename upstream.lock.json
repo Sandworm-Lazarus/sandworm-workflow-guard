@@ -1,0 +1,11 @@
+{
+  "zizmor": {
+    "version": "1.32.0",
+    "source": "https://github.com/zizmorcore/zizmor/tree/v1.32.0",
+    "distribution": "https://pypi.org/project/zizmor/1.32.0/",
+    "schema": "json-v1",
+    "tested_wheel": "zizmor-1.32.0-py3-none-manylinux_2_28_x86_64.whl",
+    "tested_wheel_sha256": "84a6acb975accc13408786a2bd274b572537ca19c933ebbc13e78f3988562071",
+    "license": "MIT"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "project": "sandworm-workflow-guard",
+  "checked_at": "2026-11-11T12:04:44.475650+00:00",
+  "tests": {
+    "total": 15,
+    "passed": 15,
+    "failed": 0,
+    "skipped": 0
+  },
+  "live_engine": {
+    "tested": true,
+    "versions": {
+      "zizmor": {
+        "version": "1.32.0",
+        "source": "https://github.com/zizmorcore/zizmor/tree/v1.32.0",
+        "distribution": "https://pypi.org/project/zizmor/1.32.0/",
+        "schema": "json-v1",
+        "tested_wheel": "zizmor-1.32.0-py3-none-manylinux_2_28_x86_64.whl",
+        "tested_wheel_sha256": "84a6acb975accc13408786a2bd274b572537ca19c933ebbc13e78f3988562071",
+        "license": "MIT"
+      }
+    }
+  },
+  "manifest_sha256": "e4eb94610b923d72c3a8f363618a3a38c745baeb6c2f3dbda0da1ff17ddd8c86",
+  "files": [
+    {
+      "path": "examples/report.json",
+      "sha256": "4000bf9a77db8f0669c0701a94ec52500e7e2a62becf1149f0bd3cf46c241892"
+    },
+    {
+      "path": "examples/upstream.json",
+      "sha256": "75c00f1af62333f6e279e6e80e8dbd496f74fac02b2e6cf32fbb43d99208f50e"
+    },
+    {
+      "path": "examples/workflows/safe.yml",
+      "sha256": "f3dfdaee96862764d90b0d8a1c35197f849e574efb0f11d79b7e008d9d52cd3e"
+    },
+    {
+      "path": "examples/workflows/unsafe.yml",
+      "sha256": "66828bb0f9254348615b8e9ffe0b7dbdd149e660b7134e2499b844995464bd26"
+    },
+    {
+      "path": "guard.py",
+      "sha256": "2aec702e98b5be687250e7aeb7d701849f9c91dad41b8dad05bed2afdf837bd2"
+    },
+    {
+      "path": "guard_safeio.py",
+      "sha256": "1fb63f938216cbb38e583dbd1ec24e7baa3a2a45159c891415e31fd62b757f94"
+    },
+    {
+      "path": "pyproject.toml",
+      "sha256": "638c19d4e91b0ccf8e78e13b67145f51de2c4316fefcb23795587b30dcd1a96b"
+    },
+    {
+      "path": "requirements-tools.txt",
+      "sha256": "66368d08832fad6d8c8d093f28a67d1897321a7fd32da6ad74590edb6a769fc4"
+    },
+    {
+      "path": "scripts/validate.py",
+      "sha256": "262dc7cb5f7c1ac26c012091ead9051e3fa9dda078df39f1094dde7be4af903c"
+    },
+    {
+      "path": "tests/test_guard.py",
+      "sha256": "d4c6384b2b402436ac1b8c5ed498970cc37172146744fba281ea356ff5f4a719"
+    },
+    {
+      "path": "upstream.lock.json",
+      "sha256": "be19e27f0dcc25f87570b63c6ce4d5d982810937656ac4bf90deac7aac10554e"
+    }
+  ],
+  "scope": "Python unit/regression tests including local live-engine test when installed; web tests run separately"
+}

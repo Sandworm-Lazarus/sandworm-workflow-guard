@@ -1,0 +1,9 @@
+name: Synthetic unsafe fixture
+on: issues
+permissions: write-all
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "${{ github.event.issue.title }}"

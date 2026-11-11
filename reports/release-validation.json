@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "project": "sandworm-workflow-guard",
+  "release": "0.1.0",
+  "status": "passed",
+  "cloud_test_count": 24,
+  "browser_qa": "not_completed_cloud_browser_runtime_unavailable",
+  "checks": [
+    {
+      "command": [
+        "python",
+        "scripts/validate.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.25
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "tests/web.test.cjs"
+      ],
+      "exit_code": 0,
+      "seconds": 0.19
+    }
+  ],
+  "source_sha256": {
+    ".github/workflows/verify.yml": "24aff5688a82e116d80cf0b8361872f1e330fe1bd7192798eaca658b41f8afb6",
+    ".gitignore": "d33b262a47c43fe4e484d1ae1f5266cba477cd6ddc21e881c596e1454122c74a",
+    "LICENSE": "2d217bec5bcc111f336e3d3429550f9efdcd40fa06906a81c991615aed24dd8a",
+    "README.md": "9a2fd4cf8f283b6998c7222b6f1a2a695ca94d3e1ae516456ccb45e1d2c398ff",
+    "SECURITY.md": "cb8146d8a7ad8b11bfbf9dca91c358f09053e8ea54841e07052ae0bdc8ec7c5e",
+    "THIRD_PARTY_NOTICES.md": "89d830f969dd7f62ab33f66c55028df86311bba02a558bd0f009ddbd1aeab13c",
+    "docs/BROWSER_QA.md": "20a67c95f8f8e3f3f39d6ece731d8e41aa6e67ab54d47c59cf191018badeb2aa",
+    "docs/DEVELOPMENT.md": "92629a72c7eae0a4b09f14f50b91f2731269f45d10dad66ad0fbd41f34f3b40b",
+    "docs/WEB_VIEWER.md": "675ac076031f2ebf1ab556154b3a7f27da3bde1203245850262e185edd8ffc91",
+    "docs/cover.svg": "ef988979f88fd8b2bcc0776d54e63846c6e2659af347882b258b9fe25885a640",
+    "examples/report.json": "4000bf9a77db8f0669c0701a94ec52500e7e2a62becf1149f0bd3cf46c241892",
+    "examples/upstream.json": "75c00f1af62333f6e279e6e80e8dbd496f74fac02b2e6cf32fbb43d99208f50e",
+    "examples/workflows/safe.yml": "f3dfdaee96862764d90b0d8a1c35197f849e574efb0f11d79b7e008d9d52cd3e",
+    "examples/workflows/unsafe.yml": "66828bb0f9254348615b8e9ffe0b7dbdd149e660b7134e2499b844995464bd26",
+    "guard.py": "2aec702e98b5be687250e7aeb7d701849f9c91dad41b8dad05bed2afdf837bd2",
+    "guard_safeio.py": "1fb63f938216cbb38e583dbd1ec24e7baa3a2a45159c891415e31fd62b757f94",
+    "pyproject.toml": "638c19d4e91b0ccf8e78e13b67145f51de2c4316fefcb23795587b30dcd1a96b",
+    "requirements-tools.txt": "66368d08832fad6d8c8d093f28a67d1897321a7fd32da6ad74590edb6a769fc4",
+    "scripts/validate.py": "262dc7cb5f7c1ac26c012091ead9051e3fa9dda078df39f1094dde7be4af903c",
+    "tests/test_guard.py": "d4c6384b2b402436ac1b8c5ed498970cc37172146744fba281ea356ff5f4a719",
+    "tests/web.test.cjs": "4dd1a5472ee0a89fc5f48fde0e6cf69a6ffb7a67ba7418d7696f1f0dffb5148f",
+    "upstream.lock.json": "be19e27f0dcc25f87570b63c6ce4d5d982810937656ac4bf90deac7aac10554e",
+    "web/_headers": "17c3b142c0879287e6ee2170c9323a32094953821992dfa1487516892d874f56",
+    "web/app.js": "335971057a297efb7a7dd4466eb11787db32d11a05d271b1cd9ae9cf84d0e11d",
+    "web/demo.json": "179e7b346f01a8e7ea90606483f2fad5523bab871337f4a53bbeccc79f193b64",
+    "web/fonts/Anuphan-OFL.txt": "cbc57ac0dddda1b70f246a16358fc3c2a32628a23a6d10ef64f746141d3fb159",
+    "web/fonts/Chakra-Petch-OFL.txt": "13831d02389d917d22fcfa6c79f98f8acbf61d230add0e73a4d4dc5f3bfb9e56",
+    "web/fonts/JetBrains-Mono-OFL.txt": "b2fe5e8987594e9ffd1d2ca52a2f5d73eb8335243893c5d6254b5ad69269591d",
+    "web/index.html": "9c83a920631b506b22ea79035e0da701179a6a4583084266775cac1c0d17bfdc",
+    "web/mark.svg": "ee731288307e122e75090d2b39fd735667292e8b069b430b8d760a2a3c3cd5ac",
+    "web/network.svg": "31596a6bbc4dea95c4abc8edd7b98bd9f00bad7ef797681de1b0574cb80f0e38",
+    "web/report-core.js": "7ee673ea5f6354fb86971883b22c73bb8baaba4a3db60ab273685f458db4c894",
+    "web/styles.css": "8924419cecaf69c9c39a29955a126f6773e6e33cff92849f525fbf6b8bdd151a"
+  },
+  "scope": "Exact source and synthetic fixtures; upstream engine proof and unit counts in validation/smoke reports. No hosted GitHub CI success is asserted."
+}

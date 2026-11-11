@@ -1,0 +1,16 @@
+.venv/
+.tools/
+__pycache__/
+*.pyc
+*.key
+*.egg-info/
+build/
+dist/
+local-output/
+node_modules/
+.runtime/
+.cache/
+out/
+output/
+.env
+.env.*

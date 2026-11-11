@@ -1,0 +1,31 @@
+[
+  {
+    "ident": "template-injection",
+    "desc": "Synthetic test fixture",
+    "determinations": {
+      "severity": "High",
+      "confidence": "High"
+    },
+    "locations": [
+      {
+        "symbolic": {
+          "kind": "Primary",
+          "key": {
+            "Local": {
+              "verbatim_path": "workflows/unsafe.yml"
+            }
+          }
+        },
+        "concrete": {
+          "location": {
+            "start_point": {
+              "row": 8,
+              "column": 8
+            }
+          },
+          "feature": "Synthetic fixture only"
+        }
+      }
+    ]
+  }
+]

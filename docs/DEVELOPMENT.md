@@ -12,3 +12,12 @@
 This is a bounded process wrapper, not an OS sandbox. Inputs should be read-only/quiescent while copying. Offline mode omits network-dependent audit coverage. An empty report does not certify a workflow's security, and guidance still needs human review in the real repository context.
 
 Next possible extensions: an owner-local path lookup kept out of shared reports, reviewed json-v2/SARIF adapters if upstream adds them, and versioned organizational policy bundles.
+
+## 2026-11-13 — optional new-finding policy
+
+Added baseline-required --fail-on-new thresholds, conservative Unknown handling,
+report-written exit 3, sanitized parser diagnostics and bounded baseline checks.
+Comparison metadata distinguishes changed live selection/engine scope from
+unknown imported scope and suppresses absence IDs for known scope differences.
+New unit/CLI tests and synthetic baseline example are provided; Python/zizmor
+execution for this revision is pending. No workflow pins or hosted services changed.

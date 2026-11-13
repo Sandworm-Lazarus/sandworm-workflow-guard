@@ -77,19 +77,107 @@ def normalize(rows, mode="import"):
             "findings": ordered,
             "privacy": {"paths": "SHA-256 aliases", "workflow_snippets": "omitted", "raw_metadata": "omitted"}}
 
-def compare(current, baseline):
-    if not isinstance(baseline, dict) or baseline.get("project") != PROJECT or baseline.get("schema_version") != 1:
+SEVERITY_RANK = {"informational": 0, "low": 1, "medium": 2, "high": 3}
+POLICY_FAILURE = 3
+
+def _baseline_ids(baseline):
+    if not isinstance(baseline, dict) or baseline.get("project") != PROJECT or type(baseline.get("schema_version")) is not int or baseline["schema_version"] != 1:
         raise InputError("INVALID_BASELINE")
     rows = baseline.get("findings")
     if not isinstance(rows, list) or len(rows) > 5000:
         raise InputError("INVALID_BASELINE")
     old = set()
     for row in rows:
-        if not isinstance(row, dict) or not isinstance(row.get("id"), str) or not re.fullmatch("[0-9a-f]{64}", row["id"]):
+        if not isinstance(row, dict) or not isinstance(row.get("id"), str) or not re.fullmatch("[0-9a-f]{64}", row["id"]) or row["id"] in old:
             raise InputError("INVALID_BASELINE")
         old.add(row["id"])
+    _file_selection(baseline)
+    return old
+
+def _file_selection(report):
+    """Only full explicit input selections can establish file-set comparability."""
+    if "inputs" not in report:
+        return None
+    rows = report["inputs"]
+    if not isinstance(rows, list) or not 1 <= len(rows) <= 64:
+        raise InputError("INVALID_BASELINE_INPUTS")
+    ids, total = set(), 0
+    for row in rows:
+        if not isinstance(row, dict) or set(row) != {"file_id", "sha256", "bytes"}:
+            raise InputError("INVALID_BASELINE_INPUTS")
+        if any(not isinstance(row[key], str) or not re.fullmatch("[0-9a-f]{64}", row[key]) for key in ("file_id", "sha256")):
+            raise InputError("INVALID_BASELINE_INPUTS")
+        if row["file_id"] in ids or type(row["bytes"]) is not int or not 0 <= row["bytes"] <= 256*1024:
+            raise InputError("INVALID_BASELINE_INPUTS")
+        ids.add(row["file_id"])
+        total += row["bytes"]
+        if total > 2*1024*1024:
+            raise InputError("INVALID_BASELINE_INPUTS")
+    # Content hashes intentionally do not participate: edits are expected.
+    return ids
+
+def _engine_scope(report):
+    engine = report.get("engine")
+    if not isinstance(engine, dict) or engine.get("version_verified") is not True:
+        return None
+    version = engine.get("version")
+    if not isinstance(version, str) or not re.fullmatch(r"\d+\.\d+\.\d+", version):
+        return None
+    values = (engine.get("name"), version, engine.get("format"), engine.get("network"))
+    if any(not isinstance(value, str) or not 1 <= len(value) <= 64 for value in values):
+        return None
+    # Never export these values; different asserted contracts suppress absence IDs.
+    return values
+
+def comparison_scope(current, baseline):
+    before, after = _file_selection(baseline), _file_selection(current)
+    if before is None or after is None:
+        return "not-established"
+    if before != after:
+        return "different-file-selection"
+    old_engine, new_engine = _engine_scope(baseline), _engine_scope(current)
+    if old_engine is None or new_engine is None:
+        return "not-established"
+    if old_engine != new_engine:
+        return "different-engine-scope"
+    return "same-selection-and-engine"
+
+def compare(current, baseline):
+    old = _baseline_ids(baseline)
     now = {row["id"] for row in current["findings"]}
-    return {"new_ids": sorted(now-old), "resolved_ids": sorted(old-now), "unchanged": len(now & old)}
+    scope = comparison_scope(current, baseline)
+    absent = old-now
+    suppressed = scope in {"different-file-selection", "different-engine-scope"}
+    return {"new_ids": sorted(now-old), "resolved_ids": [] if suppressed else sorted(absent),
+            "unchanged": len(now & old), "scope_status": scope,
+            "resolution_status": "suppressed-incomparable-scope" if suppressed else
+                                 ("absence-only" if scope == "same-selection-and-engine" else "absence-only-scope-not-established"),
+            "suppressed_absence_count": len(absent) if suppressed else 0}
+
+def validate_threshold(threshold):
+    if not isinstance(threshold, str) or threshold not in SEVERITY_RANK:
+        raise InputError("INVALID_POLICY_THRESHOLD")
+    return threshold
+
+def new_finding_policy(current, baseline, threshold):
+    """New occurrence IDs only; unknown severity is conservatively qualifying."""
+    validate_threshold(threshold)
+    delta = compare(current, baseline)
+    new_ids = set(delta["new_ids"])
+    new = [row for row in current["findings"] if row["id"] in new_ids]
+    qualifying = []
+    for row in new:
+        severity = row.get("severity")
+        if not isinstance(severity, str) or (severity != "unknown" and severity not in SEVERITY_RANK):
+            raise InputError("INVALID_POLICY_FINDING")
+        if severity == "unknown" or SEVERITY_RANK[severity] >= SEVERITY_RANK[threshold]:
+            qualifying.append(row)
+    return {"schema_version": 1, "mode": "new-occurrences-only", "threshold": threshold,
+            "decision": "fail" if qualifying else "pass", "new_findings": len(new),
+            "qualifying_new_findings": len(qualifying),
+            "unknown_new_findings": sum(row["severity"] == "unknown" for row in new),
+            "unknown_severity": "qualifies-at-every-threshold", "scope_status": delta["scope_status"],
+            "exit_code": POLICY_FAILURE if qualifying else 0}
 
 def collect_files(root, selected):
     root_path = Path(root)
@@ -137,8 +225,13 @@ def scan(root, selected, binary):
                              "sha256": hashlib.sha256(data).hexdigest(), "bytes": len(data)} for path, data in files]
         return report
 
+class SafeParser(argparse.ArgumentParser):
+    def error(self, message):
+        # argparse diagnostics normally echo raw user arguments.
+        self.exit(2, "INVALID_ARGUMENTS\n")
+
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Sandworm Workflow Guard — read-only offline workflow audits")
+    parser = SafeParser(description="Sandworm Workflow Guard — read-only offline workflow audits")
     sub = parser.add_subparsers(dest="command", required=True)
     imp = sub.add_parser("import")
     imp.add_argument("input")
@@ -149,14 +242,25 @@ def main(argv=None):
     for cmd in (imp, sc):
         cmd.add_argument("--output", required=True)
         cmd.add_argument("--baseline")
+        cmd.add_argument("--fail-on-new", metavar="SEVERITY",
+                         help="Fail on new informational/low/medium/high findings; requires --baseline")
     args = parser.parse_args(argv)
     try:
-        report = scan(args.root, args.files, args.binary) if args.command == "scan" else normalize(parse_json(read_bytes(args.input)))
+        if args.fail_on_new is not None:
+            validate_threshold(args.fail_on_new)
+            if not args.baseline:
+                raise InputError("POLICY_BASELINE_REQUIRED")
+        baseline = parse_json(read_bytes(args.baseline)) if args.baseline else None
         if args.baseline:
-            report["comparison"] = compare(report, parse_json(read_bytes(args.baseline)))
+            _baseline_ids(baseline)
+        report = scan(args.root, args.files, args.binary) if args.command == "scan" else normalize(parse_json(read_bytes(args.input)))
+        if baseline is not None:
+            report["comparison"] = compare(report, baseline)
+        if args.fail_on_new is not None:
+            report["policy"] = new_finding_policy(report, baseline, args.fail_on_new)
         write_json(args.output, report)
         print("REPORT_WRITTEN")
-        return 0
+        return report.get("policy", {}).get("exit_code", 0)
     except InputError as exc:
         print(str(exc), file=sys.stderr)
         return 2

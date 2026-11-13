@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "project": "sandworm-workflow-guard",
+  "mode": "fixture",
+  "generated_at": "2026-11-13T00:00:00+00:00",
+  "engine": {
+    "name": "zizmor",
+    "version": null,
+    "supported_version": "1.32.0",
+    "version_verified": false,
+    "network": null,
+    "format": "json-v1"
+  },
+  "summary": {
+    "findings": 0,
+    "high": 0,
+    "duplicates_removed": 0
+  },
+  "findings": [],
+  "privacy": {
+    "paths": "SHA-256 aliases",
+    "workflow_snippets": "omitted",
+    "raw_metadata": "omitted"
+  }
+}

@@ -42,6 +42,19 @@ The importer supports **zizmor json-v1 arrays**, not SARIF or future schemas. Ba
 
 Imports/fixtures record the supported parser version, not an assertion about the source engine: `version` and `network` remain null, and `version_verified` is false. Live runs record the binary version after checking it and mark the worker's enforced offline mode.
 
+## Optional new-finding policy / นโยบาย CI
+
+Both scan and import accept --fail-on-new informational|low|medium|high with a
+required --baseline. Reports are written before policy exit **3**; default
+report-only exit **0** remains unchanged, and input/engine/output errors use **2**.
+Unknown severity conservatively meets every threshold. Only new occurrence IDs
+count: an existing occurrence whose severity rises does not trigger this policy.
+
+See [the policy contract and runnable synthetic example](docs/POLICY.md) for
+baseline trust, scope checks and limits. Different known live file selections or
+engine scopes suppress resolved_ids. Legacy/imported deltas have explicitly
+unverified scope; absence never proves remediation.
+
 ## Tests / การตรวจซ้ำ
 
 ```bash
